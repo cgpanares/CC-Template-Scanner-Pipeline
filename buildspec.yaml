@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+        python: 3.7
+    commands:
+        - echo 'updating packages using yum...'
+        - ls -d $PWD/*
+        - python3 -m pip install --upgrade pip
+        - aws s3 cp s3://cloudconformity-cicd-pipeline-backend/mechanism.py .
+            
+  build:
+    commands:
+        - echo Build started on `date`
+        - echo Running the script to check the template via Cloud Conformity Template Scanner.
+        - echo In progress...
+        - automation=$(ls -d $PWD/* | grep 'mechanism.py')
+        - python3 $automation $API_KEY $CCregion
+
+  post_build:
+    commands:
+         - echo Build completed on `date`
